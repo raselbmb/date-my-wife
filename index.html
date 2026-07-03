@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#ffdfe9">
+<title>A Question For You 💌</title>
+<style>
+  :root{
+    --rose:#e0447c; --rose-dark:#ad2b5d; --blush:#ffd4e2; --ink:#4a1f36;
+    --soft:#8a5570;
+    --sat:env(safe-area-inset-top,0px);
+    --sab:env(safe-area-inset-bottom,0px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    color:var(--ink);
+    min-height:100dvh;
+    background:linear-gradient(170deg,#ffe9f1 0%,#ffd9e6 45%,#f8cbe0 100%) fixed;
+    overflow-x:hidden;
+  }
+  .serif{font-family:Georgia,'Times New Roman',serif;}
+  /* floating hearts */
+  .heart-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+  .fheart{position:absolute;bottom:-8vh;font-size:20px;opacity:.4;animation:floatUp linear infinite;}
+  @keyframes floatUp{
+    0%{transform:translateY(0) rotate(0deg);opacity:0;}
+    12%{opacity:.45;}
+    100%{transform:translateY(-115vh) rotate(28deg);opacity:0;}
+  }
+  /* app shell */
+  .app{
+    position:relative;z-index:2;
+    max-width:430px;margin:0 auto;
+    min-height:100dvh;
+    display:flex;flex-direction:column;
+    padding:calc(var(--sat) + 18px) 20px calc(var(--sab) + 22px);
+  }
+  .dots{display:flex;gap:7px;justify-content:center;padding:4px 0 6px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(224,68,124,.22);transition:all .35s;}
+  .dot.on{background:var(--rose);width:22px;border-radius:99px;}
+  /* steps */
+  .step{
+    display:none;
+    flex:1;
+    flex-direction:column;
+    justify-content:center;
+    animation:slideIn .45s cubic-bezier(.2,.8,.3,1) both;
+    padding:10px 0;
+  }
+  .step.active{display:flex;}
+  @keyframes slideIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:none;}}
+  .big-emoji{font-size:52px;text-align:center;margin-bottom:14px;animation:pulse 1.7s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+  h1{font-size:30px;line-height:1.2;margin-bottom:8px;color:var(--rose-dark);text-align:center;}
+  h2{font-size:25px;line-height:1.25;margin-bottom:6px;color:var(--rose-dark);text-align:center;}
+  .sub{font-size:16px;color:var(--soft);margin-bottom:24px;font-style:italic;text-align:center;}
+  /* buttons */
+  .btn{
+    font-family:inherit;border:none;cursor:pointer;
+    border-radius:999px;font-size:18px;font-weight:600;padding:16px 40px;
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn-yes{
+    background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
+    box-shadow:0 10px 26px rgba(224,68,124,.4);
+  }
+  .btn-no{background:rgba(255,255,255,.9);color:var(--ink);border:1.5px solid var(--blush);font-weight:500;}
+  .yn-area{position:relative;height:170px;display:flex;align-items:center;justify-content:center;gap:22px;}
+  #noBtn{transition:left .25s ease,top .25s ease,transform .2s;}
+  .tease{min-height:24px;font-size:15px;color:var(--rose-dark);font-style:italic;text-align:center;margin-top:4px;}
+  /* choice grid */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:4px 0;}
+  .choice{
+    background:rgba(255,255,255,.92);
+    border:1.5px solid rgba(255,212,226,.9);
+    border-radius:20px;
+    padding:16px 10px 14px;
+    cursor:pointer;user-select:none;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:86px;
+    font-size:15px;font-weight:600;color:var(--ink);
+    text-align:center;line-height:1.25;
+    box-shadow:0 3px 10px rgba(184,47,99,.07);
+    transition:all .18s ease;
+  }
+  .choice .ce{font-size:30px;margin-bottom:7px;}
+  .choice:active{transform:scale(.95);}
+  .choice.selected{
+    border-color:var(--rose);
+    background:linear-gradient(135deg,#ffe9f1,#ffd9e6);
+    box-shadow:0 8px 20px rgba(224,68,124,.28);
+  }
+  /* inputs */
+  input,textarea{
+    font-family:inherit;font-size:17px;color:var(--ink);
+    width:100%;padding:15px 18px;border-radius:18px;
+    border:1.5px solid var(--blush);background:rgba(255,255,255,.95);
+    outline:none;transition:border-color .2s;
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,textarea:focus{border-color:var(--rose);}
+  textarea{resize:none;min-height:76px;}
+  input[type=date],input[type=time]{min-height:54px;text-align:left;}
+  label.fld{
+    display:block;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+    margin:18px 2px 7px;color:var(--rose-dark);font-weight:700;
+  }
+  .other-row{display:none;gap:9px;margin-top:12px;}
+  .other-row.show{display:flex;animation:slideIn .3s ease both;}
+  .other-row input{flex:1;}
+  .go{
+    border:none;cursor:pointer;border-radius:18px;padding:0 20px;font-size:20px;
+    background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
+    box-shadow:0 6px 16px rgba(224,68,124,.35);flex-shrink:0;
+  }
+  .backlink{
+    display:block;margin:22px auto 0;font-size:14px;color:var(--rose-dark);
+    cursor:pointer;opacity:.65;background:none;border:none;font-family:inherit;padding:8px 16px;
+  }
+  /* summary */
+  .summary{
+    background:rgba(255,255,255,.95);
+    border-radius:22px;
+    padding:6px 18px;
+    margin:2px 0 4px;
+    box-shadow:0 6px 20px rgba(184,47,99,.1);
+  }
+  .srow{
+    display:flex;align-items:baseline;gap:10px;
+    padding:13px 0;font-size:15.5px;
+  }
+  .srow + .srow{border-top:1px solid #ffe9f1;}
+  .srow .si{flex-shrink:0;}
+  .srow .sl{color:var(--soft);font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;flex-shrink:0;width:52px;}
+  .srow .sv{font-weight:600;text-align:right;flex:1;line-height:1.35;}
+  .cta-wrap{margin-top:22px;}
+  .cta-wrap .btn{width:100%;padding:17px;font-size:19px;}
+  .small{font-size:12.5px;color:var(--soft);text-align:center;margin-top:12px;line-height:1.5;padding:0 10px;}
+  /* confetti */
+  .burst{position:fixed;font-size:24px;z-index:50;pointer-events:none;animation:burstFly 1.4s ease-out forwards;}
+  @keyframes burstFly{
+    0%{transform:translate(0,0) scale(.6);opacity:1;}
+    100%{transform:translate(var(--dx),var(--dy)) scale(1.4) rotate(var(--rot));opacity:0;}
+  }
+</style>
+</head>
+<body>
+<div class="heart-bg" id="heartBg"></div>
+
+<div class="app">
+  <div class="dots" id="dots"></div>
+
+  <!-- STEP 1 -->
+  <section class="step active" id="step1">
+    <div class="big-emoji">💘</div>
+    <h1 class="serif">Hey Pretty Bird…</h1>
+    <p class="sub">I have a very important question for you.</p>
+    <h2 class="serif">Will you go on a date with me?</h2>
+    <div class="yn-area" id="ynArea">
+      <button class="btn btn-yes" id="yesBtn" onclick="goTo(2)">Yes! 💕</button>
+      <button class="btn btn-no" id="noBtn">No</button>
+    </div>
+    <p class="tease" id="tease"></p>
+  </section>
+
+  <!-- STEP 2 : food -->
+  <section class="step" id="step2">
+    <div class="big-emoji">🍽️</div>
+    <h2 class="serif">Yay!! I knew it 😍</h2>
+    <p class="sub">What are we eating, my love? Just tap one.</p>
+    <div class="grid">
+      <div class="choice" onclick="pickFood('Pizza 🍕',this)"><span class="ce">🍕</span>Pizza</div>
+      <div class="choice" onclick="pickFood('Burger 🍔',this)"><span class="ce">🍔</span>Burger</div>
+      <div class="choice" onclick="pickFood('Mediterranean 🥗',this)"><span class="ce">🥗</span>Mediterranean</div>
+      <div class="choice" onclick="pickFood('Pita 🥙',this)"><span class="ce">🥙</span>Pita</div>
+      <div class="choice" onclick="pickFood('Gyro 🌯',this)"><span class="ce">🌯</span>Gyro</div>
+      <div class="choice" onclick="pickFood('Beef 🥩',this)"><span class="ce">🥩</span>Beef</div>
+      <div class="choice" onclick="pickFood('Mutton 🍖',this)"><span class="ce">🍖</span>Mutton</div>
+      <div class="choice" onclick="showOther('food',this)"><span class="ce">✍️</span>Others</div>
+    </div>
+    <div class="other-row" id="foodOtherRow">
+      <input type="text" id="foodOther" placeholder="Type what you're craving…" enterkeyhint="go">
+      <button class="go" onclick="submitOther('food')">→</button>
+    </div>
+    <button class="backlink" onclick="goTo(1)">← back</button>
+  </section>
+
+  <!-- STEP 3 : restaurant -->
+  <section class="step" id="step3">
+    <div class="big-emoji">📍</div>
+    <h2 class="serif">Where shall I take you?</h2>
+    <p class="sub">Tap your pick and we're moving on.</p>
+    <div class="grid">
+      <div class="choice" onclick="pickPlace(&quot;Mo's Halal&quot;,this)"><span class="ce">🍢</span>Mo's Halal</div>
+      <div class="choice" onclick="pickPlace('Shah\'s Halal Food - Rochester',this)"><span class="ce">🥘</span>Shah's Halal Food</div>
+      <div class="choice" onclick="pickPlace(&quot;Jay's Halal Kitchen &amp; Restaurant&quot;,this)"><span class="ce">🍛</span>Jay's Halal Kitchen</div>
+      <div class="choice" onclick="pickPlace('Sultan Cuisine and Bakery Restaurant',this)"><span class="ce">🥐</span>Sultan Cuisine &amp; Bakery</div>
+      <div class="choice" onclick="pickPlace('Jasmine Restaurant &amp; Cafe',this)"><span class="ce">🌸</span>Jasmine Restaurant &amp; Cafe</div>
+      <div class="choice" onclick="pickPlace('Starbucks',this)"><span class="ce">☕</span>Starbucks</div>
+      <div class="choice" onclick="pickPlace('International Food Market',this)"><span class="ce">🛒</span>International Food Market</div>
+      <div class="choice" onclick="showOther('place',this)"><span class="ce">✍️</span>Others</div>
+    </div>
+    <div class="other-row" id="placeOtherRow">
+      <input type="text" id="placeOther" placeholder="Name the place, my love…" enterkeyhint="go">
+      <button class="go" onclick="submitOther('place')">→</button>
+    </div>
+    <button class="backlink" onclick="goTo(2)">← back</button>
+  </section>
+
+  <!-- STEP 4 : date & time -->
+  <section class="step" id="step4">
+    <div class="big-emoji">🗓️</div>
+    <h2 class="serif">When are you free for me?</h2>
+    <p class="sub">Pick a date and time — that's it.</p>
+    <label class="fld" for="dateInput">Date</label>
+    <input type="date" id="dateInput">
+    <label class="fld" for="timeInput">Time</label>
+    <input type="time" id="timeInput">
+    <button class="backlink" onclick="goTo(3)">← back</button>
+  </section>
+
+  <!-- STEP 5 : confirm & send -->
+  <section class="step" id="step5">
+    <div class="big-emoji">💌</div>
+    <h2 class="serif">Our date, sealed with a kiss</h2>
+    <p class="sub">One tap and it flies straight to my phone.</p>
+    <div class="summary" id="summaryBox"></div>
+    <label class="fld" for="noteInput">A little note for me (optional)</label>
+    <textarea id="noteInput" placeholder="Wear that shirt I like…" rows="2"></textarea>
+    <div class="cta-wrap">
+      <button class="btn btn-yes" onclick="sendIt()">Book our date 💍</button>
+    </div>
+    <p class="small">This opens your Messages app with everything pre-written — just hit send. 😘</p>
+    <button class="backlink" onclick="goTo(4)">← back</button>
+  </section>
+</div>
+
+<script>
+const PHONE = '+15853339472';
+const state = {food:'', place:'', date:'', time:'', note:''};
+let current = 1;
+const TOTAL = 5;
+
+/* dots */
+const dotsEl = document.getElementById('dots');
+for(let i=1;i<=TOTAL;i++){const d=document.createElement('div');d.className='dot';dotsEl.appendChild(d);}
+function paintDots(){[...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i+1===current));}
+paintDots();
+
+function goTo(n){
+  document.getElementById('step'+current).classList.remove('active');
+  current=n;
+  document.getElementById('step'+current).classList.add('active');
+  paintDots();
+  if(n===5) buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* runaway NO button */
+const noBtn=document.getElementById('noBtn');
+const yesBtn=document.getElementById('yesBtn');
+const ynArea=document.getElementById('ynArea');
+const teases=["Nice try 😏","Nope, not an option!","The button is shy…","You can't catch it 💨","Just say yes already! 🥺","It's destiny, Pretty Bird ✨","Resistance is futile 💘"];
+let dodges=0;
+function dodge(){
+  const a=ynArea.getBoundingClientRect();
+  const maxX=a.width-noBtn.offsetWidth, maxY=a.height-noBtn.offsetHeight;
+  noBtn.style.position='absolute';
+  noBtn.style.left=Math.random()*Math.max(maxX,0)+'px';
+  noBtn.style.top=Math.random()*Math.max(maxY,0)+'px';
+  dodges++;
+  document.getElementById('tease').textContent=teases[dodges%teases.length];
+  const g=Math.min(1+dodges*0.07,1.45);
+  yesBtn.style.transform='scale('+g+')';
+  noBtn.style.transform='scale('+Math.max(1-dodges*0.07,0.55)+')';
+}
+noBtn.addEventListener('mouseover',dodge);
+noBtn.addEventListener('touchstart',e=>{e.preventDefault();dodge();},{passive:false});
+noBtn.addEventListener('click',e=>{e.preventDefault();dodge();});
+
+/* tap-to-advance */
+function flashThenGo(el,next){
+  el.classList.add('selected');
+  setTimeout(()=>goTo(next),380);
+}
+function pickFood(v,el){ state.food=v; clearSel('step2'); flashThenGo(el,3); }
+function pickPlace(v,el){ state.place=v.replace(/&amp;/g,'&'); clearSel('step3'); flashThenGo(el,4); }
+function clearSel(stepId){
+  document.querySelectorAll('#'+stepId+' .choice').forEach(c=>c.classList.remove('selected'));
+}
+function showOther(kind,el){
+  clearSel(kind==='food'?'step2':'step3');
+  el.classList.add('selected');
+  const row=document.getElementById(kind+'OtherRow');
+  row.classList.add('show');
+  const inp=document.getElementById(kind+'Other');
+  inp.focus();
+  inp.onkeydown=e=>{if(e.key==='Enter')submitOther(kind);};
+}
+function submitOther(kind){
+  const v=document.getElementById(kind+'Other').value.trim();
+  if(!v)return;
+  if(kind==='food'){state.food=v;goTo(3);}
+  else{state.place=v;goTo(4);}
+}
+
+/* date & time auto-advance */
+const dateInput=document.getElementById('dateInput');
+const timeInput=document.getElementById('timeInput');
+function maybeAdvanceDT(){
+  if(dateInput.value&&timeInput.value){
+    state.date=dateInput.value; state.time=timeInput.value;
+    setTimeout(()=>{ if(current===4) goTo(5); },500);
+  }
+}
+dateInput.addEventListener('change',maybeAdvanceDT);
+timeInput.addEventListener('change',maybeAdvanceDT);
+dateInput.min=new Date().toISOString().slice(0,10);
+
+function prettyDate(d){
+  const dt=new Date(d+'T12:00:00');
+  return dt.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+function prettyTime(t){
+  const[h,m]=t.split(':');const dt=new Date();dt.setHours(+h,+m);
+  return dt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+function buildSummary(){
+  const rows=[
+    ['💕','Answer','YES!'],
+    ['🍽️','Food',state.food],
+    ['📍','Place',state.place],
+    ['🗓️','Date',prettyDate(state.date)],
+    ['⏰','Time',prettyTime(state.time)]
+  ];
+  document.getElementById('summaryBox').innerHTML=rows.map(r=>
+    '<div class="srow"><span class="si">'+r[0]+'</span><span class="sl">'+r[1]+'</span><span class="sv">'+esc(r[2])+'</span></div>'
+  ).join('');
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function buildMessage(){
+  return "💘 DATE BOOKED! 💘\n"+
+    "Your Pretty Bird said YES!\n\n"+
+    "🍽️ Food: "+state.food+"\n"+
+    "📍 Place: "+state.place+"\n"+
+    "🗓️ Date: "+prettyDate(state.date)+"\n"+
+    "⏰ Time: "+prettyTime(state.time)+
+    (state.note?"\n💌 Note: "+state.note:"")+
+    "\n\nSee you there 😘";
+}
+
+function sendIt(){
+  state.note=document.getElementById('noteInput').value.trim();
+  heartBurst();
+  const msg=buildMessage();
+  const isApple=/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
+  const sep=isApple?'&':'?';
+  const url='sms:'+PHONE+sep+'body='+encodeURIComponent(msg);
+  setTimeout(()=>{window.location.href=url;},450);
+}
+
+/* heart confetti */
+function heartBurst(){
+  const em=['💖','💘','💕','💗','❤️','💝'];
+  for(let i=0;i<24;i++){
+    const s=document.createElement('span');
+    s.className='burst';s.textContent=em[i%em.length];
+    s.style.left=(window.innerWidth/2)+'px';
+    s.style.top=(window.innerHeight/2)+'px';
+    s.style.setProperty('--dx',(Math.random()*500-250)+'px');
+    s.style.setProperty('--dy',(Math.random()*-450-60)+'px');
+    s.style.setProperty('--rot',(Math.random()*360-180)+'deg');
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1500);
+  }
+}
+
+/* ambient floating hearts */
+(function(){
+  const bg=document.getElementById('heartBg');
+  const em=['💗','💕','🌸','💞','🤍','💘'];
+  for(let i=0;i<14;i++){
+    const h=document.createElement('span');
+    h.className='fheart';h.textContent=em[i%em.length];
+    h.style.left=Math.random()*100+'vw';
+    h.style.animationDuration=(9+Math.random()*10)+'s';
+    h.style.animationDelay=(-Math.random()*12)+'s';
+    h.style.fontSize=(13+Math.random()*20)+'px';
+    bg.appendChild(h);
+  }
+})();
+</script>
+</body>
+</html>
