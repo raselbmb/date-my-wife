@@ -538,7 +538,7 @@ function sendIt(){
   const isApple=/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
   const sep=isApple?'&':'?';
   const url='sms:'+PHONE+sep+'body='+encodeURIComponent(msg);
-  setTimeout(()=>{window.location.href=url;},450);
+  setTimeout(()=>{window.location.href=url;},1500);
 }
 
 /* confetti */
