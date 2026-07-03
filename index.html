@@ -3,124 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#d7f2ef">
-<title>A Question For You 💌</title>
+<meta name="theme-color" content="#0e0810">
+<meta name="color-scheme" content="dark">
+<title>An Invitation 💌</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --rose:#e0447c; --rose-dark:#ad2b5d; --blush:#ffd4e2; --ink:#4a1f36;
-    --soft:#8a5570;
+    color-scheme:dark;
+    --bg1:#0e0810; --bg2:#1d0f22; --bg3:#2a1130;
+    --gold:#e3bd7d; --gold-hi:#f4dcae; --gold-dim:rgba(227,189,125,.3);
+    --rose:#d8437a; --pink:#ff9cbd;
+    --text:#f4e9ec; --soft:#c2a0b1;
+    --glass:rgba(255,255,255,.05);
+    --gline:rgba(227,189,125,.35);
     --sat:env(safe-area-inset-top,0px);
     --sab:env(safe-area-inset-bottom,0px);
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{height:100%;}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    color:var(--ink);
+    font-family:'Cormorant Garamond',Georgia,serif;
+    color:var(--text);
     min-height:100svh;
-    background:linear-gradient(170deg,#dbf3fa 0%,#cdeef0 45%,#c8ecd9 100%) fixed;
+    background:linear-gradient(168deg,var(--bg1) 0%,var(--bg2) 48%,var(--bg3) 100%) fixed;
     overflow-x:hidden;
   }
-  .serif{font-family:'Great Vibes',Georgia,cursive;font-weight:400;}
-  /* floating hearts */
-  .heart-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
-  .fheart{position:absolute;bottom:-8vh;font-size:20px;opacity:.4;animation:floatUp linear infinite;}
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 85% 42% at 50% -6%, rgba(216,67,122,.2), transparent 62%),
+      radial-gradient(ellipse 60% 38% at 88% 106%, rgba(227,189,125,.12), transparent 60%),
+      radial-gradient(ellipse 48% 34% at 6% 90%, rgba(110,52,140,.22), transparent 65%);
+  }
+  /* candlelight vignette */
+  body::after{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    box-shadow:inset 0 0 140px 40px rgba(0,0,0,.55);
+  }
+  .script{font-family:'Great Vibes',Georgia,cursive;font-weight:400;}
+  .caps{font-family:'Cinzel',Georgia,serif;letter-spacing:.32em;text-transform:uppercase;}
+  /* floating ambiance */
+  .heart-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1;}
+  .fheart{position:absolute;bottom:-8vh;font-size:20px;opacity:.42;animation:floatUp linear infinite;filter:drop-shadow(0 0 7px rgba(255,156,189,.35));}
   @keyframes floatUp{
     0%{transform:translateY(0) rotate(0deg);opacity:0;}
-    12%{opacity:.45;}
-    100%{transform:translateY(-115vh) rotate(28deg);opacity:0;}
+    12%{opacity:.46;}
+    100%{transform:translateY(-115vh) rotate(34deg);opacity:0;}
   }
+  .star{position:absolute;border-radius:50%;background:var(--gold-hi);animation:twinkle ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.05;transform:scale(.7);}50%{opacity:.6;transform:scale(1.15);}}
   /* app shell */
   .app{
     position:relative;z-index:2;
     max-width:430px;margin:0 auto;
     min-height:100svh;
     display:flex;flex-direction:column;
-    padding:calc(var(--sat) + 10px) 18px calc(var(--sab) + 12px);
+    padding:calc(var(--sat) + 10px) 20px calc(var(--sab) + 12px);
   }
-  .dots{display:flex;gap:7px;justify-content:center;padding:4px 0 6px;}
-  .dot{width:7px;height:7px;border-radius:50%;background:rgba(224,68,124,.22);transition:all .35s;}
-  .dot.on{background:var(--rose);width:22px;border-radius:99px;}
+  .dots{display:flex;gap:6px;justify-content:center;padding:4px 0 4px;}
+  .dot{width:5.5px;height:5.5px;border-radius:50%;background:rgba(227,189,125,.22);transition:all .35s;}
+  .dot.on{background:var(--gold);width:20px;border-radius:99px;box-shadow:0 0 10px rgba(227,189,125,.55);}
   /* steps */
   .step{
-    display:none;
-    flex:1;
-    flex-direction:column;
-    justify-content:center;
-    animation:slideIn .45s cubic-bezier(.2,.8,.3,1) both;
-    padding:4px 0;
+    display:none;flex:1;flex-direction:column;justify-content:center;
+    animation:slideIn .5s cubic-bezier(.2,.8,.3,1) both;
+    padding:2px 0;
   }
   .step.active{display:flex;}
-  @keyframes slideIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:none;}}
-  .big-emoji{font-size:38px;text-align:center;margin-bottom:8px;animation:pulse 1.7s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
-  h1{font-size:44px;line-height:1.15;margin-bottom:6px;color:var(--rose-dark);text-align:center;}
-  h2{font-size:34px;line-height:1.2;margin-bottom:4px;color:var(--rose-dark);text-align:center;}
-  .sub{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;color:var(--soft);margin-bottom:14px;font-style:italic;text-align:center;}
+  @keyframes slideIn{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:none;}}
+  /* ornament divider */
+  .orn{display:flex;align-items:center;gap:12px;justify-content:center;margin:10px 0 14px;}
+  .orn::before,.orn::after{content:'';height:1px;width:64px;background:linear-gradient(90deg,transparent,var(--gline));}
+  .orn::after{background:linear-gradient(90deg,var(--gline),transparent);}
+  .orn span{color:var(--gold);font-size:13px;letter-spacing:.1em;}
+  .eyebrow{font-size:11px;color:var(--gold);text-align:center;margin-bottom:10px;opacity:.9;}
+  h1,h2{
+    text-align:center;
+    background:linear-gradient(95deg,#f4dcae 5%,#ffb1c9 50%,#e3bd7d 95%);
+    background-size:200% auto;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    animation:shimmer 5s linear infinite;
+  }
+  @keyframes shimmer{to{background-position:200% center;}}
+  h1{font-size:46px;line-height:1.15;margin-bottom:4px;}
+  h2{font-size:34px;line-height:1.2;margin-bottom:2px;}
+  .sub{font-size:18.5px;color:var(--soft);margin-bottom:14px;font-style:italic;text-align:center;}
+  /* wax seal intro */
+  .seal-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;}
+  .seal{
+    width:120px;height:120px;border-radius:50%;cursor:pointer;border:none;
+    background:radial-gradient(circle at 38% 32%, #f06292, #c2185b 55%, #7b1035 100%);
+    box-shadow:0 0 0 5px rgba(227,189,125,.25),0 0 42px rgba(216,67,122,.5),inset 0 3px 10px rgba(255,255,255,.3),inset 0 -6px 14px rgba(0,0,0,.4);
+    color:#ffe3ec;font-family:'Great Vibes',cursive;font-size:42px;
+    display:flex;align-items:center;justify-content:center;
+    animation:sealPulse 2.2s ease-in-out infinite;
+    transition:transform .2s;
+  }
+  .seal:active{transform:scale(.92);}
+  @keyframes sealPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+  .tap-hint{font-size:15px;color:var(--soft);font-style:italic;animation:hintFade 2.4s ease-in-out infinite;}
+  @keyframes hintFade{0%,100%{opacity:.45;}50%{opacity:1;}}
   /* buttons */
   .btn{
-    font-family:inherit;border:none;cursor:pointer;
-    border-radius:999px;font-size:18px;font-weight:600;padding:16px 40px;
+    font-family:'Cormorant Garamond',Georgia,serif;border:none;cursor:pointer;
+    border-radius:999px;font-size:20px;font-weight:600;padding:15px 42px;letter-spacing:.02em;
     transition:transform .15s ease,box-shadow .15s ease;
   }
   .btn:active{transform:scale(.96);}
   .btn-yes{
     background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
-    box-shadow:0 10px 26px rgba(224,68,124,.4);
+    box-shadow:0 10px 32px rgba(216,67,122,.5),inset 0 1px 0 rgba(255,255,255,.32),0 0 0 1px rgba(227,189,125,.28);
   }
-  .btn-no{background:rgba(255,255,255,.9);color:var(--ink);border:1.5px solid var(--blush);font-weight:500;}
-  .yn-area{position:relative;height:150px;display:flex;align-items:center;justify-content:center;gap:22px;}
+  .btn-no{
+    background:var(--glass);color:var(--text);
+    border:1px solid var(--gline);font-weight:500;
+    backdrop-filter:blur(8px);
+  }
+  .yn-area{position:relative;height:145px;display:flex;align-items:center;justify-content:center;gap:22px;}
   #noBtn{transition:left .25s ease,top .25s ease,transform .2s;}
-  .tease{min-height:24px;font-size:15px;color:var(--rose-dark);font-style:italic;text-align:center;margin-top:4px;}
+  .tease{min-height:24px;font-size:17px;color:var(--pink);font-style:italic;text-align:center;margin-top:2px;}
   /* choice grid */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:2px 0;}
   .choice{
-    background:rgba(255,255,255,.92);
-    border:1.5px solid rgba(255,212,226,.9);
-    border-radius:18px;
+    background:var(--glass);
+    border:1px solid var(--gline);
+    border-radius:16px;
     padding:11px 8px 10px;
     cursor:pointer;user-select:none;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    min-height:68px;
-    font-size:14px;font-weight:600;color:var(--ink);
-    text-align:center;line-height:1.25;
-    box-shadow:0 3px 10px rgba(184,47,99,.07);
+    min-height:70px;
+    font-size:16.5px;font-weight:600;color:var(--text);
+    text-align:center;line-height:1.2;
+    backdrop-filter:blur(8px);
+    box-shadow:0 4px 16px rgba(0,0,0,.3);
     transition:all .18s ease;
   }
-  .choice .ce{font-size:24px;margin-bottom:4px;}
+  .choice .ce{font-size:24px;margin-bottom:4px;filter:drop-shadow(0 0 6px rgba(255,156,189,.3));}
   .choice:active{transform:scale(.95);}
   .choice.selected{
-    border-color:var(--rose);
-    background:linear-gradient(135deg,#ffe9f1,#ffd9e6);
-    box-shadow:0 8px 20px rgba(224,68,124,.28);
+    border-color:var(--gold);
+    background:linear-gradient(135deg,rgba(216,67,122,.3),rgba(227,189,125,.16));
+    box-shadow:0 0 0 1px var(--gold),0 8px 28px rgba(216,67,122,.38),inset 0 1px 0 rgba(255,255,255,.15);
   }
   /* inputs */
   input,textarea{
-    font-family:inherit;font-size:17px;color:var(--ink);
-    width:100%;padding:15px 18px;border-radius:18px;
-    border:1.5px solid var(--blush);background:rgba(255,255,255,.95);
-    outline:none;transition:border-color .2s;
+    font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;font-weight:500;color:var(--text);
+    width:100%;padding:14px 18px;border-radius:14px;
+    border:1px solid var(--gline);background:var(--glass);
+    outline:none;transition:border-color .2s,box-shadow .2s;
     -webkit-appearance:none;appearance:none;
+    backdrop-filter:blur(8px);
   }
-  input:focus,textarea:focus{border-color:var(--rose);}
-  textarea{resize:none;min-height:76px;}
-  input[type=date],input[type=time]{min-height:54px;text-align:left;}
+  input::placeholder,textarea::placeholder{color:rgba(194,160,177,.55);font-style:italic;}
+  input:focus,textarea:focus{border-color:var(--gold-hi);box-shadow:0 0 0 1px var(--gold-dim),0 0 22px rgba(227,189,125,.15);}
+  textarea{resize:none;min-height:70px;}
+  input[type=date],input[type=time]{min-height:54px;text-align:left;color-scheme:dark;}
   label.fld{
-    display:block;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
-    margin:18px 2px 7px;color:var(--rose-dark);font-weight:700;
+    display:block;font-size:11px;margin:15px 2px 7px;color:var(--gold);
+    font-family:'Cinzel',Georgia,serif;letter-spacing:.26em;text-transform:uppercase;
   }
   .other-row{display:none;gap:9px;margin-top:12px;}
   .other-row.show{display:flex;animation:slideIn .3s ease both;}
   .other-row input{flex:1;}
   .go{
-    border:none;cursor:pointer;border-radius:18px;padding:0 20px;font-size:20px;
+    border:none;cursor:pointer;border-radius:14px;padding:0 20px;font-size:20px;
     background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
-    box-shadow:0 6px 16px rgba(224,68,124,.35);flex-shrink:0;
+    box-shadow:0 6px 18px rgba(216,67,122,.45);flex-shrink:0;
   }
-  /* app nav bar */
+  /* nav bar */
   .navbar{
     display:flex;justify-content:space-between;align-items:center;
     padding:12px 2px 0;min-height:66px;
@@ -133,37 +186,51 @@
   .circ svg{width:22px;height:22px;}
   .circ:active{transform:scale(.9);}
   .circ-back{
-    background:rgba(255,255,255,.9);border:1.5px solid var(--blush);
-    color:var(--rose-dark);box-shadow:0 4px 12px rgba(184,47,99,.12);
-    backdrop-filter:blur(6px);
+    background:var(--glass);border:1px solid var(--gline);
+    color:var(--gold);box-shadow:0 4px 14px rgba(0,0,0,.35);
+    backdrop-filter:blur(8px);
   }
   .circ-next{
     background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
-    box-shadow:0 8px 22px rgba(224,68,124,.42);
+    box-shadow:0 8px 28px rgba(216,67,122,.5),inset 0 1px 0 rgba(255,255,255,.3),0 0 0 1px rgba(227,189,125,.25);
   }
-  .circ.disabled{opacity:.35;pointer-events:none;box-shadow:none;}
+  .circ.disabled{opacity:.28;pointer-events:none;box-shadow:none;}
   .circ.hide{visibility:hidden;pointer-events:none;}
-  /* summary */
-  .summary{
-    background:rgba(255,255,255,.95);
-    border-radius:22px;
-    padding:6px 18px;
+  /* itinerary card */
+  .menu-card{
+    position:relative;
+    background:var(--glass);
+    border:1px solid var(--gline);
+    border-radius:18px;
+    padding:20px 20px 14px;
     margin:2px 0 4px;
-    box-shadow:0 6px 20px rgba(184,47,99,.1);
+    backdrop-filter:blur(8px);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
   }
+  .menu-card::before,.menu-card::after{
+    content:'';position:absolute;width:22px;height:22px;pointer-events:none;
+    border-color:var(--gold);border-style:solid;opacity:.75;
+  }
+  .menu-card::before{top:8px;left:8px;border-width:1px 0 0 1px;border-top-left-radius:8px;}
+  .menu-card::after{bottom:8px;right:8px;border-width:0 1px 1px 0;border-bottom-right-radius:8px;}
+  .menu-title{
+    font-family:'Cinzel',Georgia,serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--gold);text-align:center;margin-bottom:4px;
+  }
+  .menu-sig{font-family:'Great Vibes',cursive;font-size:26px;text-align:center;color:var(--pink);margin-bottom:8px;}
   .srow{
     display:flex;align-items:baseline;gap:10px;
-    padding:13px 0;font-size:15.5px;
+    padding:10.5px 0;font-size:17px;
   }
-  .srow + .srow{border-top:1px solid #ffe9f1;}
+  .srow + .srow{border-top:1px solid rgba(227,189,125,.14);}
   .srow .si{flex-shrink:0;}
-  .srow .sl{color:var(--soft);font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;flex-shrink:0;width:52px;}
-  .srow .sv{font-weight:600;text-align:right;flex:1;line-height:1.35;}
-  .cta-wrap{margin-top:22px;}
-  .cta-wrap .btn{width:100%;padding:17px;font-size:19px;}
-  .small{font-size:12.5px;color:var(--soft);text-align:center;margin-top:12px;line-height:1.5;padding:0 10px;}
+  .srow .sl{color:var(--gold);font-size:10.5px;font-family:'Cinzel',Georgia,serif;letter-spacing:.2em;text-transform:uppercase;flex-shrink:0;width:64px;}
+  .srow .sv{font-weight:600;text-align:right;flex:1;line-height:1.35;color:var(--text);}
+  .cta-wrap{margin-top:18px;}
+  .cta-wrap .btn{width:100%;padding:16px;font-size:21px;}
+  .small{font-size:14px;color:var(--soft);text-align:center;margin-top:11px;line-height:1.5;padding:0 10px;font-style:italic;}
   /* confetti */
-  .burst{position:fixed;font-size:24px;z-index:50;pointer-events:none;animation:burstFly 1.4s ease-out forwards;}
+  .burst{position:fixed;font-size:24px;z-index:50;pointer-events:none;animation:burstFly 1.5s ease-out forwards;}
   @keyframes burstFly{
     0%{transform:translate(0,0) scale(.6);opacity:1;}
     100%{transform:translate(var(--dx),var(--dy)) scale(1.4) rotate(var(--rot));opacity:0;}
@@ -176,24 +243,47 @@
 <div class="app">
   <div class="dots" id="dots"></div>
 
-  <!-- STEP 1 -->
+  <!-- STEP 1 : sealed invitation -->
   <section class="step active" id="step1">
-    <div class="big-emoji">💘</div>
-    <h1 class="serif">Hey Pretty Bird…</h1>
-    <p class="sub">I have a very important question for you.</p>
-    <h2 class="serif">Will you go on a date with me?</h2>
+    <p class="eyebrow caps">A private invitation</p>
+    <h1 class="script">For Pretty Bird</h1>
+    <div class="orn"><span>❦</span></div>
+    <div class="seal-wrap">
+      <button class="seal" onclick="openSeal()" aria-label="Open invitation">♥</button>
+      <p class="tap-hint">tap the seal to open</p>
+    </div>
+  </section>
+
+  <!-- STEP 2 : the question -->
+  <section class="step" id="step2">
+    <p class="eyebrow caps">The question</p>
+    <h2 class="script">Will you go on a date with me?</h2>
+    <p class="sub">One evening. Just us. No dishes, no chores.</p>
     <div class="yn-area" id="ynArea">
-      <button class="btn btn-yes" id="yesBtn" onclick="goTo(2)">Yes! 💕</button>
+      <button class="btn btn-yes" id="yesBtn" onclick="goTo(3)">Yes! 💕</button>
       <button class="btn btn-no" id="noBtn">No</button>
     </div>
     <p class="tease" id="tease"></p>
   </section>
 
-  <!-- STEP 2 : food -->
-  <section class="step" id="step2">
-    <div class="big-emoji">🍽️</div>
-    <h2 class="serif">Yay!! I knew it 😍</h2>
-    <p class="sub">What are we eating, my love? Just tap one.</p>
+  <!-- STEP 3 : the vibe -->
+  <section class="step" id="step3">
+    <p class="eyebrow caps">The mood</p>
+    <h2 class="script">What kind of evening?</h2>
+    <p class="sub">Set the tone, my love.</p>
+    <div class="grid">
+      <div class="choice" onclick="pickVibe('Fancy &amp; dressed up 🥂',this)"><span class="ce">🥂</span>Fancy &amp; dressed up</div>
+      <div class="choice" onclick="pickVibe('Cozy &amp; casual 🧸',this)"><span class="ce">🧸</span>Cozy &amp; casual</div>
+      <div class="choice" onclick="pickVibe('Fun &amp; adventurous 🎡',this)"><span class="ce">🎡</span>Fun &amp; adventurous</div>
+      <div class="choice" onclick="pickVibe('Surprise me ✨',this)"><span class="ce">✨</span>Surprise me</div>
+    </div>
+  </section>
+
+  <!-- STEP 4 : food -->
+  <section class="step" id="step4">
+    <p class="eyebrow caps">The menu</p>
+    <h2 class="script">What are we eating?</h2>
+    <p class="sub">Chef's orders are yours tonight.</p>
     <div class="grid">
       <div class="choice" onclick="pickFood('Pizza 🍕',this)"><span class="ce">🍕</span>Pizza</div>
       <div class="choice" onclick="pickFood('Burger 🍔',this)"><span class="ce">🍔</span>Burger</div>
@@ -202,7 +292,6 @@
       <div class="choice" onclick="pickFood('Gyro 🌯',this)"><span class="ce">🌯</span>Gyro</div>
       <div class="choice" onclick="pickFood('Beef 🥩',this)"><span class="ce">🥩</span>Beef</div>
       <div class="choice" onclick="pickFood('Mutton 🍖',this)"><span class="ce">🍖</span>Mutton</div>
-      <div class="choice" onclick="pickFood('Icecream 🍨',this)"><span class="ce">🍖</span>Mutton</div>
       <div class="choice" onclick="showOther('food',this)"><span class="ce">✍️</span>Others</div>
     </div>
     <div class="other-row" id="foodOtherRow">
@@ -211,11 +300,11 @@
     </div>
   </section>
 
-  <!-- STEP 3 : restaurant -->
-  <section class="step" id="step3">
-    <div class="big-emoji">📍</div>
-    <h2 class="serif">Where shall I take you?</h2>
-    <p class="sub">Tap your pick and we're moving on.</p>
+  <!-- STEP 5 : restaurant -->
+  <section class="step" id="step5">
+    <p class="eyebrow caps">The venue</p>
+    <h2 class="script">Where shall I take you?</h2>
+    <p class="sub">Your table awaits, anywhere.</p>
     <div class="grid">
       <div class="choice" onclick="pickPlace(&quot;Mo's Halal&quot;,this)"><span class="ce">🍢</span>Mo's Halal</div>
       <div class="choice" onclick="pickPlace('Shah\'s Halal Food - Rochester',this)"><span class="ce">🥘</span>Shah's Halal Food</div>
@@ -232,27 +321,46 @@
     </div>
   </section>
 
-  <!-- STEP 4 : date & time -->
-  <section class="step" id="step4">
-    <div class="big-emoji">🗓️</div>
-    <h2 class="serif">When are you free for me?</h2>
-    <p class="sub">Pick a date and time — that's it.</p>
+  <!-- STEP 6 : date & time -->
+  <section class="step" id="step6">
+    <p class="eyebrow caps">The moment</p>
+    <h2 class="script">When are you free for me?</h2>
+    <p class="sub">Every minute until then will feel long.</p>
     <label class="fld" for="dateInput">Date</label>
     <input type="date" id="dateInput">
     <label class="fld" for="timeInput">Time</label>
     <input type="time" id="timeInput">
   </section>
 
-  <!-- STEP 5 : confirm & send -->
-  <section class="step" id="step5">
-    <div class="big-emoji">💌</div>
-    <h2 class="serif">Our date, sealed with a kiss</h2>
-    <p class="sub">One tap and it flies straight to my phone.</p>
-    <div class="summary" id="summaryBox"></div>
-    <label class="fld" for="noteInput">A little note for me (optional)</label>
+  <!-- STEP 7 : after-dinner -->
+  <section class="step" id="step7">
+    <p class="eyebrow caps">The encore</p>
+    <h2 class="script">And afterwards…?</h2>
+    <p class="sub">The night doesn't have to end at dessert.</p>
+    <div class="grid">
+      <div class="choice" onclick="pickAfter('A walk under the stars 🌙',this)"><span class="ce">🌙</span>Walk under the stars</div>
+      <div class="choice" onclick="pickAfter('Ice cream drive 🍦',this)"><span class="ce">🍦</span>Ice cream drive</div>
+      <div class="choice" onclick="pickAfter('A movie together 🎬',this)"><span class="ce">🎬</span>A movie together</div>
+      <div class="choice" onclick="pickAfter('Long drive with our songs 🚗',this)"><span class="ce">🚗</span>Long drive, our songs</div>
+      <div class="choice" onclick="pickAfter('Coffee &amp; deep talks ☕',this)"><span class="ce">☕</span>Coffee &amp; deep talks</div>
+      <div class="choice" onclick="pickAfter('Straight home to cuddle 🛋️',this)"><span class="ce">🛋️</span>Home to cuddle</div>
+    </div>
+  </section>
+
+  <!-- STEP 8 : itinerary & send -->
+  <section class="step" id="step8">
+    <p class="eyebrow caps">Our evening</p>
+    <h2 class="script">Sealed with a kiss</h2>
+    <div class="orn"><span>❦</span></div>
+    <div class="menu-card">
+      <p class="menu-title">Itinerary</p>
+      <p class="menu-sig">Rasel &amp; Pretty Bird</p>
+      <div id="summaryBox"></div>
+    </div>
+    <label class="fld" for="noteInput">A note for me — optional</label>
     <textarea id="noteInput" placeholder="Wear that shirt I like…" rows="2"></textarea>
     <div class="cta-wrap">
-      <button class="btn btn-yes" onclick="sendIt()">Book our date 💍</button>
+      <button class="btn btn-yes" onclick="sendIt()">Reserve our evening 💍</button>
     </div>
     <p class="small">This opens your Messages app with everything pre-written — just hit send. 😘</p>
   </section>
@@ -269,9 +377,9 @@
 
 <script>
 const PHONE = '+15853339472';
-const state = {food:'', place:'', date:'', time:'', note:''};
+const state = {vibe:'', food:'', place:'', date:'', time:'', after:'', note:''};
 let current = 1;
-const TOTAL = 5;
+const TOTAL = 8;
 
 /* dots */
 const dotsEl = document.getElementById('dots');
@@ -285,27 +393,34 @@ function goTo(n){
   document.getElementById('step'+current).classList.add('active');
   paintDots();
   updateNav();
-  if(n===5) buildSummary();
+  if(n===8) buildSummary();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function openSeal(){
+  miniBurst();
+  setTimeout(()=>goTo(2),350);
 }
 
 /* nav bar */
 function stepReady(){
-  if(current===2) return !!state.food;
-  if(current===3) return !!state.place;
-  if(current===4) return !!(dateInput.value&&timeInput.value);
+  if(current===3) return !!state.vibe;
+  if(current===4) return !!state.food;
+  if(current===5) return !!state.place;
+  if(current===6) return !!(dateInput.value&&timeInput.value);
+  if(current===7) return !!state.after;
   return false;
 }
 function updateNav(){
-  document.getElementById('navbar').style.visibility = current===1 ? 'hidden' : 'visible';
+  document.getElementById('navbar').style.visibility = current<=2 ? 'hidden' : 'visible';
   const next=document.getElementById('nextBtn');
-  next.classList.toggle('hide', current===5);
+  next.classList.toggle('hide', current===8);
   next.classList.toggle('disabled', !stepReady());
 }
-function goBack(){ if(current>1) goTo(current-1); }
+function goBack(){ if(current>2) goTo(current-1); }
 function goNext(){
-  if(current===4){state.date=dateInput.value;state.time=timeInput.value;}
-  if(stepReady()&&current<5) goTo(current+1);
+  if(current===6){state.date=dateInput.value;state.time=timeInput.value;}
+  if(stepReady()&&current<8) goTo(current+1);
 }
 
 /* runaway NO button */
@@ -331,8 +446,11 @@ noBtn.addEventListener('touchstart',e=>{e.preventDefault();dodge();},{passive:fa
 noBtn.addEventListener('click',e=>{e.preventDefault();dodge();});
 
 /* selections */
-function pickFood(v,el){ state.food=v; clearSel('step2'); el.classList.add('selected'); hideOther('food'); updateNav(); }
-function pickPlace(v,el){ state.place=v.replace(/&amp;/g,'&'); clearSel('step3'); el.classList.add('selected'); hideOther('place'); updateNav(); }
+function decode(v){return v.replace(/&amp;/g,'&');}
+function pickVibe(v,el){ state.vibe=decode(v); clearSel('step3'); el.classList.add('selected'); updateNav(); }
+function pickAfter(v,el){ state.after=decode(v); clearSel('step7'); el.classList.add('selected'); updateNav(); }
+function pickFood(v,el){ state.food=decode(v); clearSel('step4'); el.classList.add('selected'); hideOther('food'); updateNav(); }
+function pickPlace(v,el){ state.place=decode(v); clearSel('step5'); el.classList.add('selected'); hideOther('place'); updateNav(); }
 function clearSel(stepId){
   document.querySelectorAll('#'+stepId+' .choice').forEach(c=>c.classList.remove('selected'));
 }
@@ -341,7 +459,7 @@ function hideOther(kind){
   document.getElementById(kind+'Other').value='';
 }
 function showOther(kind,el){
-  clearSel(kind==='food'?'step2':'step3');
+  clearSel(kind==='food'?'step4':'step5');
   el.classList.add('selected');
   const row=document.getElementById(kind+'OtherRow');
   row.classList.add('show');
@@ -387,11 +505,12 @@ function prettyTime(t){
 
 function buildSummary(){
   const rows=[
-    ['💕','Answer','YES!'],
-    ['🍽️','Food',state.food],
-    ['📍','Place',state.place],
+    ['💫','Mood',state.vibe],
+    ['🍽️','Menu',state.food],
+    ['📍','Venue',state.place],
     ['🗓️','Date',prettyDate(state.date)],
-    ['⏰','Time',prettyTime(state.time)]
+    ['⏰','Time',prettyTime(state.time)],
+    ['🌙','Encore',state.after]
   ];
   document.getElementById('summaryBox').innerHTML=rows.map(r=>
     '<div class="srow"><span class="si">'+r[0]+'</span><span class="sl">'+r[1]+'</span><span class="sv">'+esc(r[2])+'</span></div>'
@@ -400,12 +519,14 @@ function buildSummary(){
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
 function buildMessage(){
-  return "💘 DATE BOOKED! 💘\n"+
+  return "💘 DATE RESERVED! 💘\n"+
     "Your Pretty Bird said YES!\n\n"+
-    "🍽️ Food: "+state.food+"\n"+
-    "📍 Place: "+state.place+"\n"+
+    "💫 Mood: "+state.vibe+"\n"+
+    "🍽️ Menu: "+state.food+"\n"+
+    "📍 Venue: "+state.place+"\n"+
     "🗓️ Date: "+prettyDate(state.date)+"\n"+
-    "⏰ Time: "+prettyTime(state.time)+
+    "⏰ Time: "+prettyTime(state.time)+"\n"+
+    "🌙 After: "+state.after+
     (state.note?"\n💌 Note: "+state.note:"")+
     "\n\nSee you there 😘";
 }
@@ -420,27 +541,28 @@ function sendIt(){
   setTimeout(()=>{window.location.href=url;},450);
 }
 
-/* heart confetti */
-function heartBurst(){
-  const em=['💖','💘','💕','💗','❤️','💝'];
-  for(let i=0;i<24;i++){
+/* confetti */
+function spawnBurst(count,emojis){
+  for(let i=0;i<count;i++){
     const s=document.createElement('span');
-    s.className='burst';s.textContent=em[i%em.length];
+    s.className='burst';s.textContent=emojis[i%emojis.length];
     s.style.left=(window.innerWidth/2)+'px';
     s.style.top=(window.innerHeight/2)+'px';
     s.style.setProperty('--dx',(Math.random()*500-250)+'px');
     s.style.setProperty('--dy',(Math.random()*-450-60)+'px');
     s.style.setProperty('--rot',(Math.random()*360-180)+'deg');
     document.body.appendChild(s);
-    setTimeout(()=>s.remove(),1500);
+    setTimeout(()=>s.remove(),1600);
   }
 }
+function heartBurst(){spawnBurst(26,['💖','💘','💕','🌹','✨','💝']);}
+function miniBurst(){spawnBurst(12,['✨','💌','💕','🌹']);}
 
-/* ambient floating hearts */
+/* ambiance: petals + twinkling gold stars */
 (function(){
   const bg=document.getElementById('heartBg');
-  const em=['💚','🩵','🍀','💙','🤍','🌿'];
-  for(let i=0;i<14;i++){
+  const em=['🌹','💕','🌸','🍃','✨','🪷','💗','❤️‍🔥'];
+  for(let i=0;i<16;i++){
     const h=document.createElement('span');
     h.className='fheart';h.textContent=em[i%em.length];
     h.style.left=Math.random()*100+'vw';
@@ -448,6 +570,17 @@ function heartBurst(){
     h.style.animationDelay=(-Math.random()*12)+'s';
     h.style.fontSize=(13+Math.random()*20)+'px';
     bg.appendChild(h);
+  }
+  for(let i=0;i<22;i++){
+    const s=document.createElement('span');
+    s.className='star';
+    const sz=(1+Math.random()*2.2);
+    s.style.width=sz+'px';s.style.height=sz+'px';
+    s.style.left=Math.random()*100+'vw';
+    s.style.top=Math.random()*100+'vh';
+    s.style.animationDuration=(2.5+Math.random()*4)+'s';
+    s.style.animationDelay=(-Math.random()*5)+'s';
+    bg.appendChild(s);
   }
 })();
 </script>
