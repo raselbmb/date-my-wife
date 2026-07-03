@@ -120,10 +120,29 @@
     background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
     box-shadow:0 6px 16px rgba(224,68,124,.35);flex-shrink:0;
   }
-  .backlink{
-    display:block;margin:12px auto 0;font-size:14px;color:var(--rose-dark);
-    cursor:pointer;opacity:.65;background:none;border:none;font-family:inherit;padding:6px 16px;
+  /* app nav bar */
+  .navbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 2px 0;min-height:66px;
   }
+  .circ{
+    width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .15s ease,opacity .25s ease,box-shadow .2s;
+  }
+  .circ svg{width:22px;height:22px;}
+  .circ:active{transform:scale(.9);}
+  .circ-back{
+    background:rgba(255,255,255,.9);border:1.5px solid var(--blush);
+    color:var(--rose-dark);box-shadow:0 4px 12px rgba(184,47,99,.12);
+    backdrop-filter:blur(6px);
+  }
+  .circ-next{
+    background:linear-gradient(135deg,var(--rose),#ff6ea0);color:#fff;
+    box-shadow:0 8px 22px rgba(224,68,124,.42);
+  }
+  .circ.disabled{opacity:.35;pointer-events:none;box-shadow:none;}
+  .circ.hide{visibility:hidden;pointer-events:none;}
   /* summary */
   .summary{
     background:rgba(255,255,255,.95);
@@ -189,7 +208,6 @@
       <input type="text" id="foodOther" placeholder="Type what you're craving…" enterkeyhint="go">
       <button class="go" onclick="submitOther('food')">→</button>
     </div>
-    <button class="backlink" onclick="goTo(1)">← back</button>
   </section>
 
   <!-- STEP 3 : restaurant -->
@@ -211,7 +229,6 @@
       <input type="text" id="placeOther" placeholder="Name the place, my love…" enterkeyhint="go">
       <button class="go" onclick="submitOther('place')">→</button>
     </div>
-    <button class="backlink" onclick="goTo(2)">← back</button>
   </section>
 
   <!-- STEP 4 : date & time -->
@@ -223,7 +240,6 @@
     <input type="date" id="dateInput">
     <label class="fld" for="timeInput">Time</label>
     <input type="time" id="timeInput">
-    <button class="backlink" onclick="goTo(3)">← back</button>
   </section>
 
   <!-- STEP 5 : confirm & send -->
@@ -238,8 +254,16 @@
       <button class="btn btn-yes" onclick="sendIt()">Book our date 💍</button>
     </div>
     <p class="small">This opens your Messages app with everything pre-written — just hit send. 😘</p>
-    <button class="backlink" onclick="goTo(4)">← back</button>
   </section>
+
+  <div class="navbar" id="navbar" style="visibility:hidden;">
+    <button class="circ circ-back" id="backBtn" onclick="goBack()" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="circ circ-next disabled" id="nextBtn" onclick="goNext()" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
 </div>
 
 <script>
@@ -259,8 +283,28 @@ function goTo(n){
   current=n;
   document.getElementById('step'+current).classList.add('active');
   paintDots();
+  updateNav();
   if(n===5) buildSummary();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* nav bar */
+function stepReady(){
+  if(current===2) return !!state.food;
+  if(current===3) return !!state.place;
+  if(current===4) return !!(dateInput.value&&timeInput.value);
+  return false;
+}
+function updateNav(){
+  document.getElementById('navbar').style.visibility = current===1 ? 'hidden' : 'visible';
+  const next=document.getElementById('nextBtn');
+  next.classList.toggle('hide', current===5);
+  next.classList.toggle('disabled', !stepReady());
+}
+function goBack(){ if(current>1) goTo(current-1); }
+function goNext(){
+  if(current===4){state.date=dateInput.value;state.time=timeInput.value;}
+  if(stepReady()&&current<5) goTo(current+1);
 }
 
 /* runaway NO button */
@@ -285,15 +329,15 @@ noBtn.addEventListener('mouseover',dodge);
 noBtn.addEventListener('touchstart',e=>{e.preventDefault();dodge();},{passive:false});
 noBtn.addEventListener('click',e=>{e.preventDefault();dodge();});
 
-/* tap-to-advance */
-function flashThenGo(el,next){
-  el.classList.add('selected');
-  setTimeout(()=>goTo(next),380);
-}
-function pickFood(v,el){ state.food=v; clearSel('step2'); flashThenGo(el,3); }
-function pickPlace(v,el){ state.place=v.replace(/&amp;/g,'&'); clearSel('step3'); flashThenGo(el,4); }
+/* selections */
+function pickFood(v,el){ state.food=v; clearSel('step2'); el.classList.add('selected'); hideOther('food'); updateNav(); }
+function pickPlace(v,el){ state.place=v.replace(/&amp;/g,'&'); clearSel('step3'); el.classList.add('selected'); hideOther('place'); updateNav(); }
 function clearSel(stepId){
   document.querySelectorAll('#'+stepId+' .choice').forEach(c=>c.classList.remove('selected'));
+}
+function hideOther(kind){
+  document.getElementById(kind+'OtherRow').classList.remove('show');
+  document.getElementById(kind+'Other').value='';
 }
 function showOther(kind,el){
   clearSel(kind==='food'?'step2':'step3');
@@ -301,27 +345,34 @@ function showOther(kind,el){
   const row=document.getElementById(kind+'OtherRow');
   row.classList.add('show');
   const inp=document.getElementById(kind+'Other');
+  if(kind==='food') state.food=''; else state.place='';
+  updateNav();
   inp.focus();
+  inp.oninput=()=>{
+    if(kind==='food') state.food=inp.value.trim();
+    else state.place=inp.value.trim();
+    updateNav();
+  };
   inp.onkeydown=e=>{if(e.key==='Enter')submitOther(kind);};
 }
 function submitOther(kind){
   const v=document.getElementById(kind+'Other').value.trim();
   if(!v)return;
-  if(kind==='food'){state.food=v;goTo(3);}
-  else{state.place=v;goTo(4);}
+  if(kind==='food'){state.food=v;} else {state.place=v;}
+  goNext();
 }
 
-/* date & time auto-advance */
+/* date & time */
 const dateInput=document.getElementById('dateInput');
 const timeInput=document.getElementById('timeInput');
-function maybeAdvanceDT(){
-  if(dateInput.value&&timeInput.value){
-    state.date=dateInput.value; state.time=timeInput.value;
-    setTimeout(()=>{ if(current===4) goTo(5); },500);
-  }
+function dtChanged(){
+  state.date=dateInput.value; state.time=timeInput.value;
+  updateNav();
 }
-dateInput.addEventListener('change',maybeAdvanceDT);
-timeInput.addEventListener('change',maybeAdvanceDT);
+dateInput.addEventListener('change',dtChanged);
+timeInput.addEventListener('change',dtChanged);
+dateInput.addEventListener('input',dtChanged);
+timeInput.addEventListener('input',dtChanged);
 dateInput.min=new Date().toISOString().slice(0,10);
 
 function prettyDate(d){
